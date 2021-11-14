@@ -11,4 +11,5 @@
 !*.hdl
 !*.cmp
 !*.asm
+!Makefile
 
