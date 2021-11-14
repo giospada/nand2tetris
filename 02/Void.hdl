@@ -1,0 +1,8 @@
+CHIP Void{
+	IN in;
+	OUT out;
+
+	PARTS:
+	One(in=in,out=tmp);
+	Not(in=tmp,out=out);
+}

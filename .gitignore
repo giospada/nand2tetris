@@ -1,0 +1,14 @@
+*
+
+!.gitignore
+
+# ...even if they are in subdirectories
+!*/
+
+!*.c
+!*.h
+!*.tst
+!*.hdl
+!*.cmp
+!*.asm
+

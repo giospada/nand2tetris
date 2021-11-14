@@ -1,0 +1,23 @@
+CHIP Void16 {
+    IN in;
+    OUT out[16];
+
+    PARTS:
+    Void(in=in,out=out[0]);
+    Void(in=in,out=out[1]);
+    Void(in=in,out=out[2]);
+    Void(in=in,out=out[3]);
+    Void(in=in,out=out[4]);
+    Void(in=in,out=out[5]);
+    Void(in=in,out=out[6]);
+    Void(in=in,out=out[7]);
+    Void(in=in,out=out[8]);
+    Void(in=in,out=out[9]);
+    Void(in=in,out=out[10]);
+    Void(in=in,out=out[11]);
+    Void(in=in,out=out[12]);
+    Void(in=in,out=out[13]);
+    Void(in=in,out=out[14]);
+    Void(in=in,out=out[15]);
+
+}

@@ -1,0 +1,9 @@
+CHIP Void {
+    IN in;
+    OUT out;
+
+    PARTS:
+    Not(in=in, out=t1);
+    And(a=in,b=t1, out=out);
+
+}

@@ -1,0 +1,9 @@
+CHIP One{
+	IN in;
+	OUT out;
+
+	PARTS:
+	Not(in=in, out=nin);
+	Nand(a=in, b=nin, out=out);
+
+}
