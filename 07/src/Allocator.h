@@ -24,8 +24,8 @@ typedef struct
 Allocator createAllocator();
 void* getFromAllocator(Allocator* all,int index);
 void addElement(Allocator* all,void* el);
-void freeAllocator();
-void freeAllocatorAndElements();
+void freeAllocator(Allocator* all);
+void freeAllocatorAndElements(Allocator* all);
 
 
 #endif

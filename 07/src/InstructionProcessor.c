@@ -1,5 +1,6 @@
 #include "InstructionProcessor.h"
 
+
 #define NINST 18
 
 typedef struct{
@@ -8,49 +9,65 @@ typedef struct{
 }KeyVal;
 
 
-void add(char* inp,Allocator* all){
 
+Allocator initOperation(){
+    Allocator all=createAllocator();
+    addElement(&all,copyString("@256"));
+    addElement(&all,copyString("D=A"));
+    addElement(&all,copyString("@SP"));
+    addElement(&all,copyString("M=D"));
+    return all;
 }
 
+void temp(char* c,Allocator* all){
+    addElement(all,copyString("tmp"));
+}
+
+void comment(char* c,Allocator* all){}
 
 KeyVal keys[]={
     {.key="add",.value=&add},
-    {.key="sub",.value=&add},
-    {.key="neg",.value=&add},
-    {.key="eq",.value=&add},
-    {.key="gt",.value=&add},
-    {.key="lt",.value=&add},
-    {.key="and",.value=&add},
-    {.key="or",.value=&add},
-    {.key="not",.value=&add},
-    {.key="push",.value=&add},
-    {.key="pop",.value=&add},
-    {.key="label",.value=&add},
-    {.key="goto",.value=&add},
-    {.key="if-goto",.value=&add},
-    {.key="function",.value=&add},
-    {.key="call",.value=&add},
-    {.key="return",.value=&add},
-    {.key="//",.value=&add}
+    {.key="sub",.value=&sub},
+    {.key="neg",.value=&neg},
+    {.key="eq",.value=&eq},
+    {.key="gt",.value=&gt},
+    {.key="lt",.value=&lt},
+    {.key="and",.value=&and},
+    {.key="or",.value=&or},
+    {.key="not",.value=&not},
+    {.key="push",.value=&push},
+    {.key="pop",.value=&pop},
+    {.key="label",.value=&temp},
+    {.key="goto",.value=&temp},
+    {.key="if-goto",.value=&temp},
+    {.key="function",.value=&temp},
+    {.key="call",.value=&temp},
+    {.key="return",.value=&temp},
+    {.key="//",.value=&comment}
 };
+
+
 
 Allocator processLine(char *line)
 {
     Allocator out = createAllocator();
-    int lenLine=strlen(line);
-    int processed=0;
-    for (int i = 0; i < lenLine && !processed; i++)
+    int lenLine = strlen(line);
+    int index = -1;
     {
-        int index=0;
-        
-        for (int j = 0; j < NINST && !processed; j++)
+        int minPos = 1e5;
+        for (int j = 0; j < NINST; j++)
         {
-            KeyVal current=keys[j];
-            if(strcmp(line,current.key)){
-                    
-                processed=1;
+            KeyVal current = keys[j];
+            int temp=strFirstSub(line,current.key);
+            if(temp<minPos && temp!=-1){
+                index=j;
+                minPos=temp;
             }
         }
     }
+    if(index!=-1){
+        keys[index].value(line,&out);
+    }
     return out;
 }
+
