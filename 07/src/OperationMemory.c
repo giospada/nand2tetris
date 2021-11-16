@@ -26,7 +26,7 @@ pair getOperation(char* line){
     return s;
 }
 
-void push(char *line, Allocator *all)
+void push(char* line,Allocator* all,OperationSetting* op)
 {
     int index;
     int minPos;
@@ -36,25 +36,32 @@ void push(char *line, Allocator *all)
         minPos = temp.s;
     }
     int parametro = toInt(minPos + strlen(parameter[index]), line);
-    
-    addElement(all, strAppendInt(copyString("@"),parametro));
-    addElement(all, copyString("D=A"));
-
-    switch (index)
+    if (index != 0)
     {
-    case 0:
-        break;
-    case 1:
-        break;
-    case 2:
-    {
-        addElement(all, copyString("@ARG"));
-        addElement(all, copyString("A=D+M"));
+        addElement(all, strAppendInt(copyString("@"), parametro));
         addElement(all, copyString("D=A"));
     }
-    break;
-    case 3:
-        break;
+
+    if (index != 3)
+    {
+        switch (index)
+        {
+        case 0:
+            addElement(all, strAppendInt(strcat(copyString("@"), op->filename), parametro));
+            addElement(all, copyString("D=M"));
+            break;
+        case 1:
+            addElement(all, copyString("todo"));
+            break;
+        case 2:
+            addElement(all, copyString("todo"));
+            break;
+        }
+        if (index != 0)
+        {
+            addElement(all, copyString("A=D+M"));
+            addElement(all, copyString("D=A"));
+        }
     }
     addElement(all, copyString("@SP"));
     addElement(all, copyString("A=M"));
@@ -63,26 +70,33 @@ void push(char *line, Allocator *all)
     addElement(all, copyString("M=M+1"));
 }
 
-void pop(char *line, Allocator *all)
+void pop(char *line, Allocator *all, OperationSetting *op)
 {
-    int index;
+    int index, minPos;
     {
         pair temp = getOperation(line);
         index = temp.f;
+        minPos = temp.s;
     }
+    int parametro = toInt(minPos + strlen(parameter[index]), line);
+
+    addElement(all,copyString("@SP"));
+    addElement(all,copyString("M=M-1"));
+    addElement(all,copyString("A=M"));
+    addElement(all,copyString("D=M"));
     switch (index)
     {
     case 0:
-        addElement(all, copyString("@LCL"));
-        break;
+    {
+        addElement(all, strAppendInt(strcat(copyString("@"), op->filename), parametro));
+        addElement(all,copyString("M=D"));
+    }
+    break;
     case 1:
-        addElement(all, copyString("@LCL"));
+        addElement(all, copyString("todo"));
         break;
     case 2:
-        addElement(all, copyString("@LCL"));
-        break;
-    case 3:
-        addElement(all, copyString("@THIS"));
+        addElement(all, copyString("todo"));
         break;
     }
 }

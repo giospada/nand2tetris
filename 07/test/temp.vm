@@ -1,10 +1,11 @@
-push constant 1
+push constant 10
 push constant 2
-gt
-push constant 1
+add
+pop static 1
+push constant 10
 push constant 2
-lt
-push constant 1
-push constant 2
-eq
+add 
+push static 1
+add 
+
 

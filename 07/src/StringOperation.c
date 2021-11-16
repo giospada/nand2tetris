@@ -27,11 +27,12 @@ int strFirstSub(char *s1, char *s2)
 
 char *copyString(char *s1)
 {
-    char *newStr = malloc(sizeof(char) * (strlen(s1) + 1));
-    for (int i = 0; i <= strlen(s1); i++)
+    char *newStr = malloc(sizeof(char) * (strlen(s1) + 2));
+    for (int i = 0; i < strlen(s1); i++)
     {
         newStr[i] = s1[i];
     }
+    newStr[strlen(s1)]='\0';
     return newStr;
 }
 
@@ -69,7 +70,7 @@ char *intToString(int from)
             temp /= 10;
         }
     }
-    char *res = malloc(sizeof(char) * (n + 1));
+    char *res = malloc(sizeof(char) * (n + 2));
     int i = 0;
     for (; i < n; i++)
     {

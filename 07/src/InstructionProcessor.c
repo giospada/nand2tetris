@@ -5,7 +5,7 @@
 
 typedef struct{
     char* key;
-    void (*value)(char*,Allocator*);
+    void (*value)(char*,Allocator*,OperationSetting* op);
 }KeyVal;
 
 
@@ -19,11 +19,13 @@ Allocator initOperation(){
     return all;
 }
 
-void temp(char* c,Allocator* all){
+
+
+void temp(char* c,Allocator* all,OperationSetting* op){
     addElement(all,copyString("tmp"));
 }
 
-void comment(char* c,Allocator* all){}
+void comment(char* c,Allocator* all,OperationSetting* op){}
 
 KeyVal keys[]={
     {.key="add",.value=&add},
@@ -48,7 +50,7 @@ KeyVal keys[]={
 
 
 
-Allocator processLine(char *line)
+Allocator processLine(char *line,OperationSetting* op)
 {
     Allocator out = createAllocator();
     int lenLine = strlen(line);
@@ -66,7 +68,7 @@ Allocator processLine(char *line)
         }
     }
     if(index!=-1){
-        keys[index].value(line,&out);
+        keys[index].value(line,&out,op);
     }
     return out;
 }

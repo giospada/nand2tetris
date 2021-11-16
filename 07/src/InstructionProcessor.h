@@ -1,6 +1,6 @@
 #ifndef INSTRUCTIONPROCESSOR_FILE
-
 #define INSTRUCTIONPROCESSOR_FILE
+
 
 #include <string.h>
 #include "Allocator.h"
@@ -10,6 +10,6 @@
 
 
 Allocator initOperation();
-Allocator processLine(char* line);
+Allocator processLine(char* line,OperationSetting* op);
 
 #endif
