@@ -72,6 +72,11 @@ char *intToString(int from)
     }
     char *res = malloc(sizeof(char) * (n + 2));
     int i = 0;
+    if (from == 0)
+    {
+        res[0]='0';
+        i++;
+    }
     for (; i < n; i++)
     {
         int resto = from % 10;

@@ -2,7 +2,7 @@
 D=A
 @SP
 M=D
-@
+@0
 D=A
 @SP
 A=M
@@ -14,8 +14,8 @@ M=M-1
 A=M
 D=M
 todo
-tmp
-@
+(LOOP_START)
+@0
 D=A
 todo
 A=D+M
@@ -25,7 +25,7 @@ A=M
 M=D
 @SP
 M=M+1
-@
+@0
 D=A
 todo
 A=D+M
@@ -48,7 +48,7 @@ M=M-1
 A=M
 D=M
 todo
-@
+@0
 D=A
 todo
 A=D+M
@@ -78,7 +78,7 @@ M=M-1
 A=M
 D=M
 todo
-@
+@0
 D=A
 todo
 A=D+M
@@ -88,8 +88,13 @@ A=M
 M=D
 @SP
 M=M+1
-tmp
-@
+@SP
+M=M-1
+A=M
+D=M
+@LOOP_START
+D;JNE
+@0
 D=A
 todo
 A=D+M

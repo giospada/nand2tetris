@@ -7,6 +7,7 @@
 #include "StringOperation.h"
 #include "OperationAritmeticBool.h"
 #include "OperationMemory.h"
+#include "OperationFlow.h"
 
 
 Allocator initOperation();
