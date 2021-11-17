@@ -36,31 +36,25 @@ void push(char* line,Allocator* all,OperationSetting* op)
         minPos = temp.s;
     }
     int parametro = toInt(minPos + strlen(parameter[index]), line);
-    if (index != 0)
+
+    if (index == 0)
+    {
+        addElement(all, strAppendInt(strcat(copyString("@"), op->filename), parametro));
+        addElement(all, copyString("D=M"));
+    }
+    else
     {
         addElement(all, strAppendInt(copyString("@"), parametro));
         addElement(all, copyString("D=A"));
-    }
+        if (index == 1 || index == 2)
+        {
+            if (index == 1)
+                addElement(all, copyString("@LCL"));
+            if (index == 2)
+                addElement(all, copyString("@ARG"));
 
-    if (index != 3)
-    {
-        switch (index)
-        {
-        case 0:
-            addElement(all, strAppendInt(strcat(copyString("@"), op->filename), parametro));
-            addElement(all, copyString("D=M"));
-            break;
-        case 1:
-            addElement(all, copyString("todo"));
-            break;
-        case 2:
-            addElement(all, copyString("todo"));
-            break;
-        }
-        if (index != 0)
-        {
             addElement(all, copyString("A=D+M"));
-            addElement(all, copyString("D=A"));
+            addElement(all, copyString("D=M"));
         }
     }
     addElement(all, copyString("@SP"));
@@ -68,6 +62,13 @@ void push(char* line,Allocator* all,OperationSetting* op)
     addElement(all, copyString("M=D"));
     addElement(all, copyString("@SP"));
     addElement(all, copyString("M=M+1"));
+}
+
+void popStackToD(Allocator* all){
+    addElement(all, copyString("@SP"));
+    addElement(all, copyString("M=M-1"));
+    addElement(all, copyString("A=M"));
+    addElement(all, copyString("D=M"));
 }
 
 void pop(char *line, Allocator *all, OperationSetting *op)
@@ -80,23 +81,26 @@ void pop(char *line, Allocator *all, OperationSetting *op)
     }
     int parametro = toInt(minPos + strlen(parameter[index]), line);
 
-    addElement(all,copyString("@SP"));
-    addElement(all,copyString("M=M-1"));
-    addElement(all,copyString("A=M"));
-    addElement(all,copyString("D=M"));
-    switch (index)
+    if(index==0)
     {
-    case 0:
-    {
+        popStackToD(all);
         addElement(all, strAppendInt(strcat(copyString("@"), op->filename), parametro));
-        addElement(all,copyString("M=D"));
+        addElement(all, copyString("M=D"));
     }
-    break;
-    case 1:
-        addElement(all, copyString("todo"));
-        break;
-    case 2:
-        addElement(all, copyString("todo"));
-        break;
+    else
+    {
+        if (index == 1)
+            addElement(all, copyString("@LCL"));
+        else
+            addElement(all, copyString("@ARG"));
+        addElement(all, copyString("D=M"));
+        addElement(all, strAppendInt(copyString("@"), parametro));
+        addElement(all, copyString("D=D+A"));
+        addElement(all, copyString("@R13"));
+        addElement(all, copyString("M=D"));
+        popStackToD(all);
+        addElement(all, copyString("@R13"));
+        addElement(all, copyString("A=M"));
+        addElement(all, copyString("M=D"));
     }
 }

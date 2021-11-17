@@ -1,13 +1,5 @@
-push constant 0
-pop static 1
-label PROVA
-push static 1
-push constant 1
-add
-pop static 1
-push static 1
-push constant 10
-lt
-if-goto PROVA
+push constant 100
+pop argument 1
+push argument 1
 
 
