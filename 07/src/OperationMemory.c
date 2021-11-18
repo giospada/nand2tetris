@@ -1,6 +1,5 @@
 #include "OperationMemory.h"
 
-
 typedef struct{
     int f;
     int s;
@@ -39,7 +38,7 @@ void push(char* line,Allocator* all,OperationSetting* op)
 
     if (index == 0)
     {
-        addElement(all, strAppendInt(strcat(copyString("@"), op->filename), parametro));
+        addElement(all, strAppendInt(strConcat(copyString("@"), op->filename), parametro));
         addElement(all, copyString("D=M"));
     }
     else
@@ -84,7 +83,7 @@ void pop(char *line, Allocator *all, OperationSetting *op)
     if(index==0)
     {
         popStackToD(all);
-        addElement(all, strAppendInt(strcat(copyString("@"), op->filename), parametro));
+        addElement(all, strAppendInt(strConcat(copyString("@"), op->filename), parametro));
         addElement(all, copyString("M=D"));
     }
     else

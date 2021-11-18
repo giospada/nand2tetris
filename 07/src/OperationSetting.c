@@ -27,6 +27,7 @@ char* fileBaseName(Input* inp){
 OperationSetting createOperationSetting(Input* inp){
     OperationSetting op;
     op.staticN=0;
+    op.returnN=0;
     op.filename=fileBaseName(inp);
     return op;
 }

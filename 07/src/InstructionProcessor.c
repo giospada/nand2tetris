@@ -42,9 +42,9 @@ KeyVal keys[]={
     {.key="label",.value=&label},
     {.key="goto",.value=&opGoto},
     {.key="if-goto",.value=&opIfgoto},
-    {.key="function",.value=&temp},
-    {.key="call",.value=&temp},
-    {.key="return",.value=&temp},
+    {.key="function",.value=&opFunction},
+    {.key="call",.value=&opCall},
+    {.key="return",.value=&opReturn},
     {.key="//",.value=&comment}
 };
 

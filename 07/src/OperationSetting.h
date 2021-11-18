@@ -7,6 +7,7 @@
 typedef struct{
     char* filename;
     int staticN;
+    int returnN;
 }OperationSetting;
 
 

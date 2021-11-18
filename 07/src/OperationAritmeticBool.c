@@ -92,5 +92,5 @@ int compareFinish(Allocator *all,OperationSetting* op)
     addElement(all, copyString("@SP"));
     addElement(all, copyString("A=M-1"));
     addElement(all, copyString("M=!M"));
-    addElement(all, strcat(strAppendInt(copyString("(ENDCOND"), op->staticN), ")"));
+    addElement(all, strConcat(strAppendInt(copyString("(ENDCOND"), op->staticN), ")"));
 }

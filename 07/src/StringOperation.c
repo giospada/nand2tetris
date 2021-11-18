@@ -1,11 +1,22 @@
 #include "StringOperation.h"
 
+char *strConcat(char *s1, char *s2)
+{
+
+    char *new_str;
+    new_str = malloc(strlen(s1) + strlen(s2) + 1);
+    new_str[0] = '\0'; 
+    strcat(new_str, s1);
+    strcat(new_str, s2);
+    return new_str;
+}
+
 char *strAppendInt(char *str, int i)
 {
     char *temp = intToString(i);
-    strcat(str, temp);
+    char* t=strConcat(str, temp);
     free(temp);
-    return str;
+    return t;
 }
 
 int strFirstSub(char *s1, char *s2)
@@ -32,7 +43,7 @@ char *copyString(char *s1)
     {
         newStr[i] = s1[i];
     }
-    newStr[strlen(s1)]='\0';
+    newStr[strlen(s1)] = '\0';
     return newStr;
 }
 
@@ -74,7 +85,7 @@ char *intToString(int from)
     int i = 0;
     if (from == 0)
     {
-        res[0]='0';
+        res[0] = '0';
         i++;
     }
     for (; i < n; i++)
@@ -84,5 +95,31 @@ char *intToString(int from)
         res[n - i - 1] = ((char)(resto + '0'));
     }
     res[i] = '\0';
+    return res;
+}
+
+int isaccetable(char c)
+{
+    return ('0' <= c && c <= '9') ||
+           ('a' <= c && c <= 'z') ||
+           ('A' <= c && c <= 'Z') ||
+           (c == '$' || c == '.' || c == '_');
+}
+
+char *getLabel(char *line, int from)
+{
+    while (!isaccetable(line[from]) && from < strlen(line))
+        from++;
+    int s = from;
+    while (isaccetable(line[from]) && from < strlen(line))
+        from++;
+
+    char *res = malloc(sizeof(char) * (from - s + 1));
+
+    for (int i = s; i < from; i++)
+    {
+        res[i - s] = line[i];
+    }
+    res[from - s] = '\0';
     return res;
 }
