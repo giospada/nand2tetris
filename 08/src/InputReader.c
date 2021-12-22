@@ -7,10 +7,10 @@ void readInput(Input *write,FILE* file)
 {
     size_t inputSize=INPBUFFSIZE;
     char* buffer=calloc(inputSize,sizeof(char));
-    while (fscanf(file,"%[^\n]\n",buffer)!=EOF)
+    while (fgets(buffer,inputSize, file)!=NULL)
     {
         char* temp=calloc((strlen(buffer)+10),sizeof(char));
-        //assert(temp!=NULL);
+        assert(temp!=NULL);
         temp=strcpy(temp,buffer);
         addElement(&write->input,temp);
     }

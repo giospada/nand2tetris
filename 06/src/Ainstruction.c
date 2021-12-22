@@ -38,8 +38,8 @@ HackInst decodeAInst(char *line, SymbolicTable *st)
             break;
         }
     }
-    assert(s != -1);
-    assert(f != -1);
+    //assert(s != -1);
+    //assert(f != -1);
     char *lab = calloc(f - s, sizeof(char));
     s += 1;
     strncpy(lab, line + s, f - s);
