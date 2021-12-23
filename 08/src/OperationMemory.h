@@ -5,6 +5,7 @@
 #include "Allocator.h"
 #include "StringOperation.h"
 #include "OperationSetting.h"
+#include <assert.h>
 #include <stdlib.h>
 
 

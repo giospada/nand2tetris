@@ -11,6 +11,7 @@
 #include "OperationSubroutine.h"
 
 
+//istruzioni da mettere all'inizio del programma
 Allocator initOperation();
 Allocator processLine(char* line,OperationSetting* op);
 

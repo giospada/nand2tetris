@@ -23,6 +23,9 @@ int main(int argc, char const *argv[])
 		for (int i = 0; i < file.input.len; i++){
 			char* line=(char *)getFromAllocator(&file.input, i);
 			Allocator all=processLine(line,&op);
+#ifdef DBG
+			addElement(&all,strConcat("//",line));
+#endif
 			writeAllocator(f,&all);
 			freeAllocatorAndElements(&all);
 		}
