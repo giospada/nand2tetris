@@ -8,13 +8,7 @@ $(TARGET): $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o $@ -g 
 
 
-
-
 clean:
 	$(RM) $(OBJS)
-
-
-
-
 
 

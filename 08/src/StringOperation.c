@@ -123,3 +123,20 @@ char *getLabel(char *line, int from)
     res[from - s] = '\0';
     return res;
 }
+
+
+int finishWith(char* str,char* comp){
+    int len1=strlen(str);
+    int len2=strlen(comp);
+    if(len1<len2){
+        return 0;
+    }
+    for(int i=0;i<len2;i++){
+        if(str[i+(len1-len2)]!=comp[i]){
+            return 0;
+        }
+    }
+    return 1;
+
+}
+

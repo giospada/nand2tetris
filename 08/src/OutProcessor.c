@@ -1,6 +1,8 @@
 #include "OutProcessor.h"
 
 
+
+
 char* fileName(Input* inp){
     char* outName;
     {
@@ -22,6 +24,22 @@ char* fileName(Input* inp){
     }
     return outName;
 }
+FILE* openDir(InputDir* inp){
+    char* temp=basename(inp->dirName);
+    char* outName=strConcat(temp,".asm");
+
+#ifdef DBG
+        printf("%s\n",outName);
+#endif
+#ifdef DBG
+    FILE *outFile =stdout; 
+#else
+    FILE *outFile = fopen(outName, "w");
+#endif
+    free(outName);
+
+    return outFile;
+}
 
 FILE* openFile(Input* inp){
     char* outName=fileName(inp);
@@ -33,6 +51,7 @@ FILE* openFile(Input* inp){
 #else
     FILE *outFile = fopen(outName, "w");
 #endif
+    return outFile;
 
 }
 

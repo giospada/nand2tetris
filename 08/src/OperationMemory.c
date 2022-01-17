@@ -7,8 +7,9 @@ typedef struct{
 
 #define NUM_PAR 8
 char *parameter[] = {
-    "static", "local", "argument", "constant","this","that","temp","pointer"};
+    "local", "argument", "this","that","static", "constant","temp","pointer"};
 
+char *parToAInst[] = {"LCL","ARG","THIS","THAT"};
 
 
 
@@ -31,6 +32,135 @@ pair getOperation(char* line){
     return s;
 }
 
+void push(char* line,Allocator* all,OperationSetting* op)
+{
+    
+    int index;
+    int minPos;
+    {
+        pair temp = getOperation(line);
+        index = temp.f;
+        minPos = temp.s;
+    }
+    int parametro = toInt(minPos + strlen(parameter[index]), line);
+    switch (index)
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    {
+        addElement(all, strConcat("@", parToAInst[index]));
+        //si può migliorare
+        addElement(all, copyString("D=M"));
+        addElement(all, strAppendInt("@", parametro));
+        addElement(all, copyString("A=D+A"));
+        addElement(all, copyString("D=M"));
+    }
+    break;
+    case 4:
+    {
+        char * c=strConcat("@", op->filename);
+        addElement(all, strAppendInt(c, parametro));
+        addElement(all, copyString("D=M"));
+        free(c);
+    }
+    break;
+    case 5:
+    {
+        addElement(all,strAppendInt("@",parametro));
+        addElement(all,copyString("D=A"));
+    }
+    break;
+    case 6:
+    {
+        addElement(all,strAppendInt("@",5+parametro));
+        addElement(all,copyString("D=M"));
+    }
+    break;
+    case 7:
+    {
+        if(parametro==0){
+            addElement(all,copyString("@THIS"));
+        }else{
+            addElement(all,copyString("@THAT"));
+        }
+        addElement(all,copyString("D=M"));
+    }
+    break;
+    }
+    addElement(all, copyString("@SP"));
+    addElement(all, copyString("M=M+1"));
+    addElement(all, copyString("A=M-1"));
+    addElement(all, copyString("M=D"));
+}
+
+
+void popToD(Allocator* all){
+    addElement(all,copyString("@SP"));
+    addElement(all,copyString("AM=M-1"));
+    addElement(all,copyString("D=M"));
+}
+
+void pop(char* line,Allocator* all,OperationSetting* op)
+{
+    
+    int index;
+    int minPos;
+    {
+        pair temp = getOperation(line);
+        index = temp.f;
+        minPos = temp.s;
+    }
+    int parametro = toInt(minPos + strlen(parameter[index]), line);
+    switch (index)
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    {
+        addElement(all, strConcat("@", parToAInst[index]));
+        addElement(all, copyString("D=M"));
+        addElement(all, strAppendInt("@", parametro));
+        addElement(all, copyString("D=D+A"));
+        addElement(all, copyString("@R13"));
+        addElement(all, copyString("M=D"));
+        popToD(all);
+        addElement(all, copyString("@R13"));
+        addElement(all, copyString("A=M"));
+    }
+    break;
+    case 4:
+    {
+        popToD(all);
+        char * c=strConcat("@", op->filename);
+        addElement(all, strAppendInt(c, parametro));
+        free(c);
+    }
+    break;
+    case 6:
+    {
+        popToD(all);
+        addElement(all,strAppendInt("@",5+parametro));
+    }
+    break;
+    case 7:
+    {
+        popToD(all);
+        if(parametro==0){
+            addElement(all,copyString("@THIS"));
+        }else{
+            addElement(all,copyString("@THAT"));
+        }
+    }
+    break;
+    }
+    addElement(all,copyString("M=D"));
+}
+
+
+/*
 
 void push(char* line,Allocator* all,OperationSetting* op)
 {
@@ -44,9 +174,11 @@ void push(char* line,Allocator* all,OperationSetting* op)
     int parametro = toInt(minPos + strlen(parameter[index]), line);
 
     if (index == 0)
-    {
-        addElement(all, strAppendInt(strConcat(copyString("@"), op->filename), parametro));
+    {   
+        char* temp=strConcat("@", op->filename);
+        addElement(all, strAppendInt(temp, parametro));
         addElement(all, copyString("D=M"));
+        free(temp);
     }
     else if(index == 7)
     {
@@ -60,7 +192,7 @@ void push(char* line,Allocator* all,OperationSetting* op)
     }
     else
     {
-        addElement(all, strAppendInt(copyString("@"), parametro));
+        addElement(all, strAppendInt("@", parametro));
         addElement(all, copyString("D=A"));
         if (index == 6)
         {
@@ -93,8 +225,7 @@ void push(char* line,Allocator* all,OperationSetting* op)
 void popStackToD(Allocator *all)
 {
     addElement(all, copyString("@SP"));
-    addElement(all, copyString("M=M-1"));
-    addElement(all, copyString("A=M"));
+    addElement(all, copyString("AM=M-1"));
     addElement(all, copyString("D=M"));
 }
 
@@ -111,8 +242,10 @@ void pop(char *line, Allocator *all, OperationSetting *op)
     if (index == 0)
     {
         popStackToD(all);
-        addElement(all, strAppendInt(strConcat(copyString("@"), op->filename), parametro));
+        char* t=strConcat("@", op->filename);
+        addElement(all, strAppendInt(t, parametro));
         addElement(all, copyString("M=D"));
+        free(t);
     }
     else if (index == 7)
     {
@@ -143,7 +276,8 @@ void pop(char *line, Allocator *all, OperationSetting *op)
                 addElement(all, copyString("@THAT"));
             addElement(all, copyString("D=M"));
         }
-        addElement(all, strAppendInt(copyString("@"), parametro));
+        addElement(all, strAppendInt("@", parametro));
+
         addElement(all, copyString("D=D+A"));
         addElement(all, copyString("@R13"));
         addElement(all, copyString("M=D"));
@@ -153,3 +287,4 @@ void pop(char *line, Allocator *all, OperationSetting *op)
         addElement(all, copyString("M=D"));
     }
 }
+*/

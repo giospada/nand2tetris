@@ -10,12 +10,13 @@ typedef struct{
 
 
 
-Allocator initOperation(){
+Allocator initOperation(OperationSetting* op){
     Allocator all=createAllocator();
     addElement(&all,copyString("@256"));
     addElement(&all,copyString("D=A"));
     addElement(&all,copyString("@SP"));
     addElement(&all,copyString("M=D"));
+    opCall("call Sys.init 0",&all,op);
     return all;
 }
 
