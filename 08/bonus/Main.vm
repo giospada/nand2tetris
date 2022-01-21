@@ -1,0 +1,508 @@
+// tre variabili locali: La chessboard che è un array e poi, posizione iniziale, posizionione finale
+function Main.main 3 
+//creato l'array in local0
+push constant 64
+call Array.new 1
+pop local 0
+//inizializza l'array
+push local 0
+call Main.initChessBoard 1
+pop temp 0
+label INFINITE_LOOP_TOP
+// ridipinge la chessboard
+push local 0
+call Main.draw 1
+pop temp 0
+//muove il cursore all'inizio così si vedranno la posizione che viene inserita
+push constant 0
+push constant 0
+call Output.moveCursor 2
+pop temp 0
+// se la posizione iniziale è uguale a -1 ricomincia il loop
+call Main.input 0
+pop local 1
+push constant 1
+neg
+push local 1
+eq
+if-goto INFINITE_LOOP_TOP
+// legge la posizione dove muovere il pezzo
+call Main.input 0
+pop local 2
+// se la posizione è -1 allora ricomincia il loop
+push constant 1
+neg
+push local 2
+eq
+if-goto INFINITE_LOOP_TOP
+// metto il valore di chessboard[posizione_finale]=chessboard[posizione_iniziale]
+push local 2
+push local 0
+add
+push local 1
+push local 0
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+//metto il valore 0 in chessboard[posizione_iniziale]
+push local 1
+push local 0
+add
+pop pointer 1
+push constant 0
+pop that 0
+
+goto INFINITE_LOOP_TOP
+push constant 0
+return
+
+
+// non ha parametri in input
+// 3 variabli locali che sono una per ricordarsi parametro una per la x e una per la y
+function Main.input 2
+// leggiamo la prima posizione
+call Keyboard.readChar 0
+// ci togliamo 65
+push constant 65
+sub
+// checkiamo se è  compresa tra -1 < val <8 
+pop local 0
+push constant 1
+neg
+push local 0
+lt
+push local 0
+push constant 8
+lt
+and
+not
+// se non corrisponde facciamo il return di -1
+if-goto Break_end
+// leggiamo la y
+// ci togliamo 56-y (dove y ha il valore della char) per avere la posizione giusta
+push constant 56
+call Keyboard.readChar 0
+sub
+pop local 1
+// checkiamo se è  compresa tra -1 < val <8 
+push constant 1
+neg
+push local 1
+lt
+push local 1
+push constant 8
+lt
+and
+not
+if-goto Break_end
+// se va bene chiamiamo pos con x e y per restituirci la posizione nellarray chessborard
+push local 1
+push local 0
+call Main.pos 2
+return
+label Break_end
+//altrimenti restuisce -1
+push constant 1
+neg
+return
+
+
+//inizializza la chessboard , argomento ha la chessboard (Array)
+// una variabile come indice 
+function Main.initChessBoard 1
+push constant 0
+pop local 0
+//mette tutto l'array a zero
+//da zero a 64
+label while1_top
+push local 0
+push constant 64
+lt
+not
+if-goto whiel1_bot
+//setta a zero la posizione corrente
+push local 0
+push argument 0
+add
+pop pointer 1
+push constant 0
+pop that 0
+//incrementa local 0
+push local 0
+push constant 1
+add
+pop local 0
+goto while1_top
+label whiel1_bot
+
+//inizializziamo local 0 
+push constant 1
+pop local 0
+// scriviamo tutti i pedoni nell'array
+label while2_top
+push local 0
+push constant 64
+lt
+not
+if-goto while2_bot
+//essendo che abbiamo messo uno e incrementiamo di 8 local 0 avrà sempre l'indirizzo
+// della prima colonna e per l'altro basta aggiungere 5
+push local 0
+push argument 0
+add
+pop pointer 1
+push constant 80
+neg
+pop that 0
+// incrementiamo il pointer di 5
+push pointer 1
+push constant 5
+add
+pop pointer 1
+push constant 80
+pop that 0
+//incrementiamo di 8 perchè andiamo avanti di una colonna
+push local 0
+push constant 8
+add
+pop local 0
+goto while2_top
+label while2_bot
+//mette gli alfieri
+push constant 2
+push constant 66
+push argument 0
+call Main.setPice 3
+pop temp 0
+//mette i cavalli
+push constant 1
+push constant 78
+push argument 0
+call Main.setPice 3
+//mette le torri
+pop temp 0
+push constant 0
+push constant 82
+push argument 0
+call Main.setPice 3
+pop temp 0
+//mette i due re
+push constant 32
+push argument 0
+add
+pop pointer 1
+push constant 75
+neg
+pop that 0
+push constant 39
+push argument 0
+add
+pop pointer 1
+push constant 75
+pop that 0
+
+//mette le due regine
+
+push constant 24
+push argument 0
+add
+pop pointer 1
+push constant 81
+neg
+pop that 0
+
+push constant 31
+push argument 0
+add
+pop pointer 1
+push constant 81
+pop that 0
+
+push constant 0
+return
+
+
+// prende in input la posizione delle x dove viene messo il primo pezzo
+// il valore da scrivere in tutte le posizioni e l'array
+// questa funzione serve per mettere i pezzi simmetrici
+function Main.setPice 1
+//moltiplica per 8 per avere la posizione nell'array
+push argument 0
+push constant 8
+call Math.multiply 2
+//scrive il pezzo nero nella prima colonna
+pop local 0
+push local 0
+push argument 2
+add
+pop pointer 1
+push argument 1
+neg
+pop that 0
+// scrive nella posizione +7 per il pezzo bianco
+push local 0
+push constant 7
+add
+push argument 2
+add
+pop pointer 1
+push argument 1
+pop that 0
+
+//calcola su che colonna deve posizionare gli altri due
+push constant 7
+push argument 0
+sub
+// la moltiplica per 8 per vaere il valore esatto
+push constant 8
+call Math.multiply 2
+pop local 0
+// scrive il valore nella posizione calcolata per il nero
+push local 0
+push argument 2
+add
+pop pointer 1
+push argument 1
+neg
+pop that 0
+//scrive la posizione per il bianco aggiungendogli +7
+push local 0
+push constant 7
+add
+push argument 2
+add
+pop pointer 1
+push argument 1
+pop that 0
+push constant 0
+return
+
+
+//la funzione scrive a video la chessboard mettendo tutti i pezzi
+// argomenti sono l'array che rappresenta la chessboard
+function Main.draw 3
+// le variabili locali servono per iterare per tutto l'array 
+// e ne ho creata un altra per calcolare il valore della posizione nell'array
+call Screen.clearScreen 0
+pop temp 0
+//settiamo il primo indice a zero
+push constant 0
+pop local 0
+
+label  primo_while_top
+push local 0
+push constant 8
+lt
+not
+if-goto primo_while_end
+push constant 0
+pop local 1
+label secondo_while_top
+push local 1
+push constant 8
+lt
+not
+if-goto secondo_while_end
+push local 0
+push local 1
+call Main.pos 2
+pop local 2
+push local 0
+push local 1
+push local 2
+push argument 0
+add
+pop pointer 1
+push that 0
+call Main.drowPices 3
+pop temp 0
+push local 1
+push constant 1
+add
+pop local 1
+goto secondo_while_top
+label secondo_while_end
+push local 0
+push constant 1
+add
+pop local 0
+goto primo_while_top
+label primo_while_end
+call Main.drowCoordinates 0
+pop temp 0
+call Main.drawChessBoard 0
+pop temp 0
+push constant 0
+return
+
+
+
+// scrive le righe per disegnare la scacchiera
+// non ha parametri in input
+function Main.drawChessBoard 1
+push constant 152
+pop local 0
+// va dal pixel 152 finchè non è minore di 345 incrementandolo di 24 per scrivere 
+// tutte le colonne
+label while_top_0
+push local 0
+push constant 345
+lt
+not
+if-goto while_end_0
+// i primo e il secondo parametro sono uguali per fare la riga verticali
+// gli altri due sono gli estremi della chessboard
+push local 0
+push constant 26
+push local 0
+push constant 202
+call Screen.drawLine 4
+pop temp 0
+push local 0
+push constant 24
+add
+pop local 0
+
+goto while_top_0
+label while_end_0
+
+// ciclo per dipingere le righe vanno da 26 finchè non sono minori di 203
+// con un incremento di 22 
+push constant 26
+pop local 0
+label while_top_1
+push local 0
+push constant 203
+lt
+not
+if-goto while_end_1
+// scrivo la righa mettendo i valori delle y uguali e cambiando quello delle x
+push constant 152
+push local 0
+push constant 344
+push local 0
+call Screen.drawLine 4
+pop temp 0
+push local 0
+push constant 22
+add
+pop local 0
+
+goto while_top_1
+label while_end_1
+push constant 0
+
+return
+
+// prende in input una x e una y e calcola il corrispettivo nell'array
+function Main.pos 0
+push argument 1
+push constant 8
+call Math.multiply 2
+push argument 0
+add
+return
+
+
+//scrive le coordinate 
+// non ha parametri
+function Main.drowCoordinates 1
+push constant 0
+pop local 0
+label while_top
+push local 0
+push constant 8
+lt
+not
+if-goto while_end
+// calcola la x dove muovere il cursore
+push constant 3
+push local 0
+push constant 2
+call Math.multiply 2
+add
+// valore precalcolato
+push constant 18
+call Output.moveCursor 2
+pop temp 0
+// i numeri vanno scritti al contrario rispetto al contatore
+push constant 8
+push local 0
+sub
+call Output.printInt 1
+pop temp 0
+// x precalcolata
+push constant 19
+// calcola il vaore della y
+push constant 20
+push local 0
+push constant 3
+call Math.multiply 2
+add
+call Output.moveCursor 2
+pop temp 0
+// scrive il carattere a video
+push constant 97
+push local 0
+add
+call Output.printChar 1
+pop temp 0
+// incrementa il counter
+push local 0
+push constant 1
+add
+pop local 0
+goto while_top
+label while_end
+
+push constant 0
+return
+
+
+// prende in input il la posizione x e y e il pezzo da scrivere a video
+function Main.drowPices 2
+push argument 2
+push constant 0
+lt
+not
+if-goto PEZZO_BIANCO
+//neghiamo il vlore del pezzo
+push argument 2
+neg
+pop argument 2
+// aggiungiamo 32 per renderlo lowercase
+push argument 2
+push constant 32
+add
+pop argument 2
+label PEZZO_BIANCO
+// mette il cursore nella x giusta
+push argument 0
+push constant 2
+call Math.multiply 2
+push constant 3
+add
+// mette il cursore nella y giusta
+push argument 1
+push constant 3
+call Math.multiply 2
+push constant 20
+add
+call Output.moveCursor 2
+pop temp 0
+//scrive il pezzo se è diverso da zero
+push argument 2
+push constant 0
+eq
+if-goto PEZZO_ZERO
+push argument 2
+call Output.printChar 1
+pop temp 0
+
+label PEZZO_ZERO
+push constant 0
+return
